@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\GetCurrentUserAction;
+use App\Http\Controllers\Auth\LoginAction;
+use App\Http\Controllers\Auth\LogoutAction;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('login', LoginAction::class);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('logout', LogoutAction::class);
+    Route::get('user', GetCurrentUserAction::class);
 });
