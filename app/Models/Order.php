@@ -7,14 +7,20 @@ use App\Models\Order\Status;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /**
+ * @property int $id
+ * @property int $plan_id
  * @property PlanType $plan_type
  * @property Status $status
  * @property PackagePlan|NormalPlan $plan
- * @property Collection<Job> $reservedJobs
+ * @property Collection<ReservedJob> $reservedJobs
+ * @property Carbon $started_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class Order extends Model
 {
@@ -45,8 +51,8 @@ class Order extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function reservedJobs(): HasManyThrough
+    public function reservedJobs(): HasMany
     {
-        return $this->hasManyThrough(Job::class, ReservedJob::class);
+        return $this->hasMany(ReservedJob::class, 'order_id');
     }
 }
