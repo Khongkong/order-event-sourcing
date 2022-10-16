@@ -15,10 +15,13 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('plan_type');
-            $table->tinyInteger('status');
-            $table->integer('plan_id');
-            $table->dateTime('started_at');
+            $table->uuid('uuid');
+            $table->tinyInteger('plan_type')->default(0);
+            $table->tinyInteger('status')->default(0);
+            $table->integer('plan_id')->default(0);
+            $table->integer('company_id');
+            $table->boolean('is_valid')->default(true);
+            $table->dateTime('started_at')->nullable();
             $table->timestamps();
         });
     }

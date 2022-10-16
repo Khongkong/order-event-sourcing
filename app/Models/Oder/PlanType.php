@@ -4,6 +4,7 @@ namespace App\Models\Order;
 
 enum PlanType: int
 {
-    case NORMAL = 0;
-    case PACKAGE = 1;
+    case UNDETERMINED = 0;
+    case NORMAL = 1;
+    case PACKAGE = 2;
 }

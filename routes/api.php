@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\GetCurrentUserAction;
 use App\Http\Controllers\Auth\LoginAction;
 use App\Http\Controllers\Auth\LogoutAction;
+use App\Http\Controllers\Order\SelectOrderPlan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,4 +22,7 @@ Route::post('login', LoginAction::class);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', LogoutAction::class);
     Route::get('user', GetCurrentUserAction::class);
+    Route::prefix('orders')->group(function () {
+        Route::put('plan', SelectOrderPlan::class);
+    });
 });
