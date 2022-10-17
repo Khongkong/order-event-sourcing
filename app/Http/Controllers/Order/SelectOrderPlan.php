@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Order;
 
 use App\Aggregates\OrderAggregateRoot;
+use App\Exceptions\InvalidPlanException;
 use App\Http\Controllers\Controller;
-use App\Models\Order\PlanType;
 use App\Models\User;
+use App\Projectors\Exceptions\PlanNotFoundException;
 use App\Repositories\OrderRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class SelectOrderPlan extends Controller
 {
@@ -21,19 +21,18 @@ class SelectOrderPlan extends Controller
     public function __invoke(Request $request): Response
     {
         /**
-         * @var User|null $user
+         * @var User $user
          */
         $user = auth()->user();
-        if ($user === null) {
-            return response([
-                'result' => 'user not logged in or not found',
-            ], SymfonyResponse::HTTP_FORBIDDEN);
-        }
 
-        OrderAggregateRoot::retrieve($this->getUuid($user))
-            ->createOrder($user->company_id)
-            ->selectPlan($request->integer('planType'), $request->integer('planId'), $user->company_id)
-            ->persist();
+        try {
+            OrderAggregateRoot::retrieve($this->getUuid($user))
+                ->createOrder($user->company_id)
+                ->selectPlan($request->integer('planType'), $request->integer('planId'), $user->company_id)
+                ->persist();
+        } catch (PlanNotFoundException $e) {
+            throw new InvalidPlanException();
+        }
 
         return response([
             'result' => 'success',

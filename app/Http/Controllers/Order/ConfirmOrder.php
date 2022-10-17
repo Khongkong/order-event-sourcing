@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Order;
 
 use App\Aggregates\OrderAggregateRoot;
+use App\Exceptions\Order\OrderMissingException;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Repositories\OrderRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class ConfirmOrder extends Controller
 {
@@ -20,22 +20,10 @@ class ConfirmOrder extends Controller
         Request $request
     ): Response {
         /**
-         * @var User|null $user
+         * @var User $user
          */
         $user = auth()->user();
-        if ($user === null) {
-            return response([
-                'result' => 'user not logged in or not found',
-            ], SymfonyResponse::HTTP_FORBIDDEN);
-        }
-
-        try {
-            $orderUuid = $this->getUuid($user);
-        } catch (\UnexpectedValueException $e) {
-            return response([
-                'errors' => 'order should be created first',
-            ], SymfonyResponse::HTTP_FORBIDDEN);
-        }
+        $orderUuid = $this->getUuid($user);
 
         OrderAggregateRoot::retrieve($orderUuid)
             ->confirmOrder($user->company_id)
@@ -49,7 +37,7 @@ class ConfirmOrder extends Controller
     {
         $order = $this->orderRepository->findCurrentOrder($user->company_id);
         if ($order === null) {
-            throw new \UnexpectedValueException('Order not found');
+            throw new OrderMissingException();
         }
         return $order->uuid;
     }

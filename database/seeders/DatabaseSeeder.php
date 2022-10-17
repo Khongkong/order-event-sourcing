@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
 //            CompanySeeder::class,
-            JobSeeder::class,
+//            JobSeeder::class,
 //            NormalPlanSeeder::class,
 //            OrderSeeder::class,
 //            PackagePlanSeeder::class,

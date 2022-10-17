@@ -8,6 +8,8 @@ use App\Events\OrderCreated;
 use App\Events\PlanSelected;
 use App\Events\StartDateSelected;
 use App\Models\Order;
+use App\Projectors\Exceptions\PlanNotFoundException;
+use App\Projectors\Exceptions\UnidentifiedJobException;
 use App\Repositories\JobRepository;
 use App\Repositories\NormalPlanRepository;
 use App\Repositories\OrderRepository;
@@ -41,7 +43,7 @@ class OrderProjector extends Projector
             ? $this->normalPlanRepository->find($event->getPlanId())
             : $this->packagePlanRepository->find($event->getPlanId());
         if ($plan === null) {
-            throw new \UnexpectedValueException('Plan not found');
+            throw new PlanNotFoundException();
         }
         $this->orderRepository->updateOderPlan($event->getCompanyId(), $plan);
     }
@@ -58,7 +60,7 @@ class OrderProjector extends Projector
     {
         $jobs = $this->jobRepository->getJobs($jobIds = $event->getJobIds());
         if ($jobs->count() !== count($jobIds)) {
-            throw new \RangeException('Some jobs are not found');
+            throw new UnidentifiedJobException();
         }
         if ($jobs->isNotEmpty()) {
             $this->reservedJobRepository->addReservingJobs($event->getOrderId(), $jobIds);

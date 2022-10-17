@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Order;
 
 use App\Aggregates\OrderAggregateRoot;
+use App\Exceptions\Order\OrderMissingException;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Repositories\OrderRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class SelectOrderStartDate extends Controller
 {
@@ -21,23 +21,10 @@ class SelectOrderStartDate extends Controller
     ): Response
     {
         /**
-         * @var User|null $user
+         * @var User $user
          */
         $user = auth()->user();
-        if ($user === null) {
-            return response([
-                'result' => 'user not logged in or not found',
-            ], SymfonyResponse::HTTP_FORBIDDEN);
-        }
-
-        try {
-            $orderUuid = $this->getUuid($user);
-        } catch (\UnexpectedValueException $e) {
-            return response([
-                'errors' => 'order should be created first',
-            ], SymfonyResponse::HTTP_FORBIDDEN);
-        }
-
+        $orderUuid = $this->getUuid($user);
         OrderAggregateRoot::retrieve($orderUuid)
             ->selectStartDate($request->integer('startedAt'), $user->company_id)
             ->persist();
@@ -49,7 +36,7 @@ class SelectOrderStartDate extends Controller
     {
         $order = $this->orderRepository->findCurrentOrder($user->company_id);
         if ($order === null) {
-            throw new \UnexpectedValueException('Order not found');
+            throw new OrderMissingException();
         }
         return $order->uuid;
     }
