@@ -14,10 +14,12 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property int $plan_id
+ * @property string $uuid
  * @property PlanType $plan_type
  * @property Status $status
  * @property PackagePlan|NormalPlan $plan
  * @property Collection<ReservedJob> $reservedJobs
+ * @property int $price
  * @property Carbon $started_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -47,7 +49,7 @@ class Order extends Model
     }
 
     /**
-     * Get all of the reservedJobs for the Order
+     * Get all the reservedJobs for the Order
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

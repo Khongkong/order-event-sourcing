@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\NormalPlan;
 use Illuminate\Database\Seeder;
 
 class NormalPlanSeeder extends Seeder
@@ -14,6 +14,12 @@ class NormalPlanSeeder extends Seeder
      */
     public function run()
     {
-        //
+        collect([7, 30])
+            ->each(function (int $term) {
+                NormalPlan::factory()->create([
+                    'term' => $term,
+                ]);
+            });
+
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Job;
 use Illuminate\Database\Seeder;
 
 class JobSeeder extends Seeder
@@ -14,6 +14,8 @@ class JobSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Job::factory(5)->create([
+            'company_id' => 2022,
+        ]);
     }
 }

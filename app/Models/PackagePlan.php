@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Order\PlanType;
 use App\Models\Plan\PlanContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -28,13 +29,28 @@ class PackagePlan extends Model implements PlanContract
         'extra_bonus' => 'array',
     ];
 
-    /**
-     * Get the basePlan associated with the PackagePlan
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function basePlan(): HasOne
+    public function basePlan(): BelongsTo
     {
-        return $this->hasOne(NormalPlan::class, 'id', 'base_plan_id');
+        return $this->belongsTo(NormalPlan::class, 'id', 'base_plan_id');
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getPrice(): int
+    {
+        return $this->price;
+    }
+
+    public function getTerm(): int
+    {
+        return $this->basePlan->term;
+    }
+
+    public function getPlanType(): PlanType
+    {
+        return PlanType::PACKAGE;
     }
 }
