@@ -2,18 +2,25 @@
 
 namespace App\Aggregates;
 
+use App\Events\FirstStepLimitHit;
 use App\Events\JobsReserved;
 use App\Events\OrderConfirmed;
 use App\Events\OrderCreated;
 use App\Events\PlanSelected;
 use App\Events\StartDateSelected;
-use App\Models\Order\PlanType;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 
 class OrderAggregateRoot extends AggregateRoot
 {
+    private int $enterFirstStepCount = 0;
+
     public function createOrder(int $companyId): self
     {
+        if ($this->hasEnteredFirstStepTooManyTimes()) {
+            $this->recordThat(new FirstStepLimitHit($companyId));
+            $this->persist();
+        }
+
         $this->recordThat(new OrderCreated($companyId));
         return $this;
     }
@@ -43,5 +50,20 @@ class OrderAggregateRoot extends AggregateRoot
     {
         $this->recordThat(new OrderConfirmed($companyId));
         return $this;
+    }
+
+    public function applyOrderCreated(OrderCreated $event): void
+    {
+        $this->enterFirstStepCount++;
+    }
+
+    public function getEnterFirstStepCount(): int
+    {
+        return $this->enterFirstStepCount;
+    }
+
+    private function hasEnteredFirstStepTooManyTimes(): bool
+    {
+        return $this->enterFirstStepCount >= 2;
     }
 }

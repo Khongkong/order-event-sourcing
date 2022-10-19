@@ -2,6 +2,7 @@
 
 namespace App\Projectors;
 
+use App\Events\FirstStepLimitHit;
 use App\Events\JobsReserved;
 use App\Events\OrderConfirmed;
 use App\Events\OrderCreated;
@@ -16,6 +17,7 @@ use App\Repositories\OrderRepository;
 use App\Repositories\PackagePlanRepository;
 use App\Repositories\ReservedJobRepository;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Log;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class OrderProjector extends Projector
@@ -71,5 +73,10 @@ class OrderProjector extends Projector
     public function onOrderConfirmed(OrderConfirmed $event): void
     {
         $this->orderRepository->confirmOrder($event->getCompanyId());
+    }
+
+    public function onFirstStepLimitHit(FirstStepLimitHit $event): void
+    {
+        Log::info($event->getCompanyId() . ' has reached the first step limit');
     }
 }
