@@ -4,7 +4,7 @@ namespace App\Events;
 
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
-class OrderCreated extends ShouldBeStored
+class OrderInitiated extends ShouldBeStored
 {
     public function __construct(
         private int $companyId

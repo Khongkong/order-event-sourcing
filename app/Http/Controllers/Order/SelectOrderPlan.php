@@ -27,7 +27,7 @@ class SelectOrderPlan extends Controller
 
         try {
             OrderAggregateRoot::retrieve($this->getUuid($user))
-                ->createOrder($user->company_id)
+                ->initiateOrder($user->company_id)
                 ->selectPlan($request->integer('planType'), $request->integer('planId'), $user->company_id)
                 ->persist();
         } catch (PlanNotFoundException $e) {

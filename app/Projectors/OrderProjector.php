@@ -5,7 +5,7 @@ namespace App\Projectors;
 use App\Events\FirstStepLimitHit;
 use App\Events\JobsReserved;
 use App\Events\OrderConfirmed;
-use App\Events\OrderCreated;
+use App\Events\OrderInitiated;
 use App\Events\PlanSelected;
 use App\Events\StartDateSelected;
 use App\Models\Order;
@@ -31,7 +31,7 @@ class OrderProjector extends Projector
     ) {
     }
 
-    public function onOrderCreated(OrderCreated $event): void
+    public function onOrderInitiated(OrderInitiated $event): void
     {
         if ($this->orderRepository->findCurrentOrder($event->getCompanyId()) !== null) {
             return;
