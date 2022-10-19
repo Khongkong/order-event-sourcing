@@ -7,8 +7,8 @@ use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 class StartDateSelected extends ShouldBeStored
 {
     public function __construct(
-        private int $startedAtTimestamp,
-        private int $companyId
+        private readonly int $startedAtTimestamp,
+        private readonly int $companyId
     ) {}
 
     public function getCompanyId(): int

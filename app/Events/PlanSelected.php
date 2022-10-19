@@ -8,9 +8,9 @@ use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 class PlanSelected extends ShouldBeStored
 {
     public function __construct(
-        private int $planTypeValue,
-        private int $planId,
-        private int $companyId,
+        private readonly int $planTypeValue,
+        private readonly int $planId,
+        private readonly int $companyId,
     ) {
     }
 

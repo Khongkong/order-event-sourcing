@@ -7,7 +7,7 @@ use App\Models\ReservedJob;
 class ReservedJobRepository
 {
 
-    public function addReservingJobs($orderId, array $jobIds): void
+    public function addReservingJobs(int $orderId, array $jobIds): void
     {
         $insertData = collect($jobIds)
             ->map(fn (int $jobId): array => [

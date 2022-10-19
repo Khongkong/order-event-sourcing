@@ -23,11 +23,11 @@ use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 class OrderProjector extends Projector
 {
     public function __construct(
-        private OrderRepository $orderRepository,
-        private NormalPlanRepository $normalPlanRepository,
-        private PackagePlanRepository $packagePlanRepository,
-        private JobRepository $jobRepository,
-        private ReservedJobRepository $reservedJobRepository
+        private readonly OrderRepository $orderRepository,
+        private readonly NormalPlanRepository $normalPlanRepository,
+        private readonly PackagePlanRepository $packagePlanRepository,
+        private readonly JobRepository $jobRepository,
+        private readonly ReservedJobRepository $reservedJobRepository
     ) {
     }
 

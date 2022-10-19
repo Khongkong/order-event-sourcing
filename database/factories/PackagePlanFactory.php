@@ -17,7 +17,9 @@ class PackagePlanFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'id' => fake()->numberBetween(1, 99999),
+            'description' => fake()->text(),
+            'price' => fake()->numberBetween(1000, 3000),
         ];
     }
 }
